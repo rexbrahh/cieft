@@ -2,6 +2,7 @@
 /inspect
 /smoke_load
 /layer0_step
+/two_layer_nn
 *.dSYM/
 .DS_Store
 

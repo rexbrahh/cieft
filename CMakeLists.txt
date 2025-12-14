@@ -38,5 +38,13 @@ target_link_libraries(smoke_load PRIVATE cieft_core)
 add_executable(layer0_step src/layer0_step.cpp)
 target_link_libraries(layer0_step PRIVATE cieft_core)
 
+add_executable(two_layer_nn exercises/two_layer_nn.cpp)
+target_compile_options(two_layer_nn PRIVATE -Wall -Wextra -Wpedantic)
+if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  if(NOT CIEFT_MCPU STREQUAL "")
+    target_compile_options(two_layer_nn PRIVATE "-mcpu=${CIEFT_MCPU}")
+  endif()
+endif()
+
 # Convenience: place binaries in the repo root so you can run `./inspect ...`
-set_target_properties(inspect smoke_load layer0_step PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}")
+set_target_properties(inspect smoke_load layer0_step two_layer_nn PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}")
