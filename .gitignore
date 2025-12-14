@@ -2,3 +2,5 @@
 /inspect
 *.dSYM/
 .DS_Store
+
+*.gguf
