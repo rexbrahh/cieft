@@ -3,6 +3,7 @@
 Small, boring, bounds-checked GGUF tooling (macOS arm64).
 
 What’s in here:
+
 - `inspect`: prints GGUF header/metadata + a full tensor map (dtype, shape, file offsets).
 - `smoke_load`: loads + dequantizes a small subset of tensors to float32 and prints basic stats.
 - `layer0_step`: a prototype “layer 0, one token” forward step for LLaMA-style (incl. GQA) models.
@@ -17,8 +18,6 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCIEFT_MCPU=native
 cmake --build build -j
 ```
 
-Binaries are emitted into the repo root (so you can run `./inspect ...`).
-
 ## Tools
 
 ### Inspect a GGUF
@@ -28,6 +27,7 @@ Binaries are emitted into the repo root (so you can run `./inspect ...`).
 ```
 
 Prints:
+
 - header (version, tensor count, metadata count)
 - selected metadata keys + `tokenizer.*` summaries
 - dtype histogram
@@ -60,6 +60,7 @@ Add `--lm-head` to also load/dequant `output_norm.weight` and `output.weight`.
 ```
 
 Notes:
+
 - currently supports only `--pos 0` (single token) in the prototype
 - matrix weights are interpreted as `[in, out]` and applied as `y = W^T x` (columns contiguous)
 
@@ -73,4 +74,3 @@ Notes:
 ```
 
 Prints: input, hidden pre-activation, hidden activation, logits, softmax, argmax.
-
