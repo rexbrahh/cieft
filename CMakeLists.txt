@@ -12,19 +12,31 @@ endif()
 
 set(CIEFT_MCPU "apple-m1" CACHE STRING "AppleClang -mcpu value (e.g. apple-m1, apple-m2, native)")
 
-add_executable(inspect
+add_library(cieft_core
+  src/dequant_q4_k.cpp
+  src/dequant_q6_k.cpp
   src/gguf.cpp
-  src/inspect.cpp
+  src/gguf_loader.cpp
+  src/layer0.cpp
+  src/weights.cpp
 )
 
-target_compile_options(inspect PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(cieft_core PRIVATE -Wall -Wextra -Wpedantic)
 
 if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   if(NOT CIEFT_MCPU STREQUAL "")
-    target_compile_options(inspect PRIVATE "-mcpu=${CIEFT_MCPU}")
+    target_compile_options(cieft_core PRIVATE "-mcpu=${CIEFT_MCPU}")
   endif()
 endif()
 
-# Convenience: place binaries in the repo root so you can run `./inspect ...`
-set_target_properties(inspect PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}")
+add_executable(inspect src/inspect.cpp)
+target_link_libraries(inspect PRIVATE cieft_core)
 
+add_executable(smoke_load src/smoke_load.cpp)
+target_link_libraries(smoke_load PRIVATE cieft_core)
+
+add_executable(layer0_step src/layer0_step.cpp)
+target_link_libraries(layer0_step PRIVATE cieft_core)
+
+# Convenience: place binaries in the repo root so you can run `./inspect ...`
+set_target_properties(inspect smoke_load layer0_step PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}")

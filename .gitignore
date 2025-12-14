@@ -1,5 +1,7 @@
 /build/
 /inspect
+/smoke_load
+/layer0_step
 *.dSYM/
 .DS_Store
 
