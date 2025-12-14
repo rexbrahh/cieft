@@ -1,0 +1,4 @@
+/build/
+/inspect
+*.dSYM/
+.DS_Store
