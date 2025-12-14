@@ -1,8 +1,6 @@
 /build/
-/inspect
-/smoke_load
-/layer0_step
-/two_layer_nn
+/bin/*
+!/bin/.gitkeep
 *.dSYM/
 .DS_Store
 

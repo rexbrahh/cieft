@@ -4,10 +4,11 @@ Small, boring, bounds-checked GGUF tooling (macOS arm64).
 
 What’s in here:
 
-- `inspect`: prints GGUF header/metadata + a full tensor map (dtype, shape, file offsets).
-- `smoke_load`: loads + dequantizes a small subset of tensors to float32 and prints basic stats.
-- `layer0_step`: a prototype “layer 0, one token” forward step for LLaMA-style (incl. GQA) models.
-- `two_layer_nn`: a tiny exercise program that prints every intermediate vector.
+- `bin/inspect`: prints GGUF header/metadata + a full tensor map (dtype, shape, file offsets).
+- `bin/smoke_load`: loads + dequantizes a small subset of tensors to float32 and prints basic stats.
+- `bin/layer0_step`: a prototype “layer 0, one token” forward step for LLaMA-style (incl. GQA) models.
+- `bin/two_layer_nn`: a tiny exercise program that prints every intermediate vector.
+- `bin/two_layer_nn_sample`: a tiny exercise program that can greedy-pick from logits or sample with temperature.
 
 `*.gguf` files are ignored by git; keep model files local.
 
@@ -18,12 +19,14 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCIEFT_MCPU=native
 cmake --build build -j
 ```
 
+Binaries are emitted into `bin/` (and ignored by git).
+
 ## Tools
 
 ### Inspect a GGUF
 
 ```sh
-./inspect path/to/model.gguf
+./bin/inspect path/to/model.gguf
 ```
 
 Prints:
@@ -48,7 +51,7 @@ Optional substring filter(s):
 ### Smoke test: load + dequant (layer 0)
 
 ```sh
-./smoke_load path/to/model.gguf --layer 0
+./bin/smoke_load path/to/model.gguf --layer 0
 ```
 
 Add `--lm-head` to also load/dequant `output_norm.weight` and `output.weight`.
@@ -56,7 +59,7 @@ Add `--lm-head` to also load/dequant `output_norm.weight` and `output.weight`.
 ### Prototype: layer 0 single-token step
 
 ```sh
-./layer0_step path/to/model.gguf --token 1 --pos 0
+./bin/layer0_step path/to/model.gguf --token 1 --pos 0
 ```
 
 Notes:
@@ -69,8 +72,17 @@ Notes:
 ### Two-layer NN (4 → 8 → 3)
 
 ```sh
-./two_layer_nn
-./two_layer_nn 0.1 -0.2 0.3 0.4
+./bin/two_layer_nn
+./bin/two_layer_nn 0.1 -0.2 0.3 0.4
 ```
 
 Prints: input, hidden pre-activation, hidden activation, logits, softmax, argmax.
+
+### Two-layer NN sampling (temperature)
+
+Greedy uses logits directly (`argmax(logits)`), softmax is only needed for sampling.
+
+```sh
+./bin/two_layer_nn_sample
+./bin/two_layer_nn_sample --temperature 0.7 --seed 123
+```
