@@ -86,3 +86,12 @@ Greedy uses logits directly (`argmax(logits)`), softmax is only needed for sampl
 ./bin/two_layer_nn_sample
 ./bin/two_layer_nn_sample --temperature 0.7 --seed 123
 ```
+
+### Two-token attention toy
+
+Two tokens, dim=4. Computes Q/K/V projections, attention weights (softmax), and mixed values.
+
+```sh
+./bin/two_token_attention
+./bin/two_token_attention 0.1 -0.2 0 0.3  -0.1 0.4 0.2 -0.3
+```

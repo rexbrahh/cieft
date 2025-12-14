@@ -54,9 +54,17 @@ if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   endif()
 endif()
 
+add_executable(two_token_attention exercises/two_token_attention.cpp)
+target_compile_options(two_token_attention PRIVATE -Wall -Wextra -Wpedantic)
+if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  if(NOT CIEFT_MCPU STREQUAL "")
+    target_compile_options(two_token_attention PRIVATE "-mcpu=${CIEFT_MCPU}")
+  endif()
+endif()
+
 # Place binaries in repo-root `bin/` (single-config + multi-config generators).
 set(CIEFT_BIN_DIR "${CMAKE_SOURCE_DIR}/bin")
-foreach(tgt IN ITEMS inspect smoke_load layer0_step two_layer_nn two_layer_nn_sample)
+foreach(tgt IN ITEMS inspect smoke_load layer0_step two_layer_nn two_layer_nn_sample two_token_attention)
   set_target_properties(${tgt} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CIEFT_BIN_DIR}"
     RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CIEFT_BIN_DIR}"
